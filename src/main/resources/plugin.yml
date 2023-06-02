@@ -1,0 +1,14 @@
+name: disasters
+version: '${project.version}'
+main: net.volnir.disasters.Disasters
+api-version: 1.19
+depend: [Citizens]
+commands:
+  werewolf:
+    description: "start werewolf disaster"
+  stats:
+    description: "View player stats"
+  gamemaster:
+    description: "spawn game master"
+  setlobby:
+    description: "Set game lobby"
