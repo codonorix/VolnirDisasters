@@ -12,3 +12,5 @@ commands:
     description: "spawn game master"
   setlobby:
     description: "Set game lobby"
+  debug:
+    description: "Debug tool for admins"

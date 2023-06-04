@@ -10,10 +10,13 @@ import net.volnir.disasters.game.gamesystem.gameItems.LeaveItem;
 import net.volnir.disasters.helper.Messages;
 import net.volnir.disasters.storage.GameStorage;
 import net.volnir.disasters.storage.PlayerStorage;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scoreboard.Team;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.logging.Logger;
 
 public class GameController {
 	Logger logger;
-	public void joinGame(Player player) {
+	public void joinGame(Player player) throws IOException {
 		if (isInGameCheck(player)) return;
 
 		GameObject gameObject = checkForOpenGame();
@@ -29,10 +32,13 @@ public class GameController {
 		if(gameObject == null) {
 			List<Player> playerList = new ArrayList<>(Arrays.asList(player));
 			gameObject = new GameObject(null, playerList, GameStages.WAITING_LOBBY, null, null, 2, 16);
+			gameObject.generateMap();
 			addGameObject(gameObject);
 		}else{
 			gameObject.addPlayer(player);
 		}
+
+		player.teleport(gameObject.getLobbySpawnPoint());
 
 		PlayerStorage.getPlayerObject(player.getUniqueId()).setGameId(gameObject.getGameId());
 		clearUserEffects(player);
@@ -72,12 +78,27 @@ public class GameController {
 		GameStorage.getGameObject(gameId).removePlayer(player);
 	}
 
+	private void notifyPlayers(GameObject gameObject, Player leavingPlayer) {
+		gameObject.playerLeaveNotification(leavingPlayer);
+	}
+
+	private void removeTeam(Player player) {
+		for(Team team : Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeams()) {
+			if(team.hasPlayer(player)) team.removePlayer(player);
+		}
+	}
+
 	public void playerLeaveGame(Player player) {
 		PlayerObject playerObject = PlayerStorage.getPlayerObject(player.getUniqueId());
+		GameObject gameObject = GameStorage.getGameObject(playerObject.getGameId());
 
-		removeFromGameObject(player, playerObject.getGameId());
+		if(playerObject.getGameId() != null) {
+			notifyPlayers(gameObject, player);
+			removeFromGameObject(player, playerObject.getGameId());
+		}
+
+		removeTeam(player);
 		clearUserEffects(player);
-
 		playerObject.setGameId(null);
 
 		try {

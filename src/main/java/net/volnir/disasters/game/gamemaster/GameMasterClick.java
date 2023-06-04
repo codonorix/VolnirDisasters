@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class GameMasterClick implements Listener {
 	@EventHandler
-	public void gameMasterClickEvent(PlayerInteractEntityEvent event) {
+	public void gameMasterClickEvent(PlayerInteractEntityEvent event) throws IOException {
 		if (!(event.getRightClicked().customName().equals(GameEntitiesNames.GAME_MASTER.getName()))) return;
 		if(!(event.getHand().equals(EquipmentSlot.HAND))) return;
 
