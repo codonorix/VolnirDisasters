@@ -59,6 +59,7 @@ public class GenerateMap {
 				}
 
 				gameObject.setLobbySpawnPoint(new Location(world, x, 120, z));
+				gameObject.setMapSpawnPoint(new Location(world, x, 2, z));
 				return new Location(world, x, 0, z);
 			}
 		}

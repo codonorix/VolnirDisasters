@@ -1,7 +1,5 @@
 package net.volnir.disasters.disasters.night.werewolf;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -9,13 +7,13 @@ import net.kyori.adventure.title.Title;
 import net.volnir.disasters.Disasters;
 import net.volnir.disasters.disasters.DisastersInterface;
 import net.volnir.disasters.helper.CustomHeadCreator;
+import net.volnir.disasters.helper.Messages;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -26,7 +24,6 @@ import org.bukkit.scoreboard.Team;
 import java.util.*;
 
 public class WereWolf implements DisastersInterface {
-	private static WereWolf objectInstance = null;
 	private Random random = new Random();
 	private List<Player> gamePlayers = null;
 	private Player wereWolf = null;
@@ -36,6 +33,28 @@ public class WereWolf implements DisastersInterface {
 		generateWerewolf();
 		sendTitle();
 		createWereWolf();
+	}
+
+	@Override
+	public void disasterMessage(List<Player> players) {
+		for(Player player : players) {
+			player.sendMessage(Messages.LINE_BREAK_ONE.getMessage());
+			player.sendMessage(Component.text("WEREWOLF", TextColor.color(255, 0, 0), TextDecoration.BOLD));
+			player.sendMessage("");
+			player.sendMessage(Component.text("Ready, set, howl! One of you is a ferocious werewolf, so start running like your fur is on fire!"));
+			player.sendMessage(Messages.LINE_BREAK_ONE.getMessage());
+		}
+	}
+
+	@Override
+	public void disasterEffect(List<Player> players) {
+		for(Player player : players) {
+			player.setPlayerTime(18000, false);
+		}
+	}
+
+	public boolean soloDisaster() {
+		return false;
 	}
 
 	private void generateWerewolf() {
@@ -125,9 +144,11 @@ public class WereWolf implements DisastersInterface {
 	private void setEffects() {
 		PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2);
 		PotionEffect jumpBoost = new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 1);
+		PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 2);
 
 		wereWolf.addPotionEffect(speed);
 		wereWolf.addPotionEffect(jumpBoost);
+		wereWolf.addPotionEffect(nightVision);
 	}
 
 	private ItemStack showPlayersItem() {
@@ -184,6 +205,7 @@ public class WereWolf implements DisastersInterface {
 		for(Player player : noWolfList) {
 			PotionEffect glowEffect = new PotionEffect(PotionEffectType.GLOWING, 5*20, 1, true);
 			player.addPotionEffect(glowEffect);
+			player.playSound(player.getLocation(), Sound.ENTITY_WOLF_HOWL, 1f, 0.7f);
 		}
 	}
 
@@ -213,14 +235,6 @@ public class WereWolf implements DisastersInterface {
 		}
 
 		this.wereWolf.getInventory().clear();
-	}
-
-	public static WereWolf getObjectInstance() {
-		return objectInstance;
-	}
-
-	public static void setObjectInstance(WereWolf wereWolf) {
-		objectInstance = wereWolf;
 	}
 
 	public Player getWereWolf() {

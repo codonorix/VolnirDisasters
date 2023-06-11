@@ -10,6 +10,7 @@ public class PlayerObject {
 	private int totalGames;
 	private int coins;
 	private int lootBoxs;
+	private boolean isSpectator = false;
 
 	public PlayerObject(Player player, String gameId, int wins, int deaths, int totalGames, int coins, int lootBoxs) {
 		this.player = player;
@@ -75,5 +76,13 @@ public class PlayerObject {
 
 	public void setLootBoxs(int lootBoxs) {
 		this.lootBoxs = lootBoxs;
+	}
+
+	public boolean isSpectator() {
+		return isSpectator;
+	}
+
+	public void setSpectator(boolean spectator) {
+		isSpectator = spectator;
 	}
 }

@@ -31,7 +31,7 @@ public class GameController {
 
 		if(gameObject == null) {
 			List<Player> playerList = new ArrayList<>(Arrays.asList(player));
-			gameObject = new GameObject(null, playerList, GameStages.WAITING_LOBBY, null, null, 2, 16);
+			gameObject = new GameObject(null, playerList, GameStages.WAITING_LOBBY, 2, 16);
 			gameObject.generateMap();
 			addGameObject(gameObject);
 		}else{
@@ -99,6 +99,7 @@ public class GameController {
 
 		removeTeam(player);
 		clearUserEffects(player);
+		resetTime(player);
 		playerObject.setGameId(null);
 
 		try {
@@ -115,5 +116,9 @@ public class GameController {
 
 	private void addGameObject(GameObject gameObject) {
 		GameStorage.addGameObject(gameObject);
+	}
+
+	private void resetTime(Player player) {
+		player.resetPlayerTime();
 	}
 }

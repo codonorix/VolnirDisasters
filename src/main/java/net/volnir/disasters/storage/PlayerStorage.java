@@ -1,6 +1,8 @@
 package net.volnir.disasters.storage;
 
 import net.volnir.disasters.game.PlayerObject;
+import net.volnir.disasters.game.gameobject.GameObject;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -41,5 +43,7 @@ public class PlayerStorage {
 		return instance.containsKey(uuid);
 	}
 
-
+	public static GameObject getGameObj(Player player) {
+		return GameStorage.getGameObject(PlayerStorage.getPlayerObject(player.getUniqueId()).getGameId());
+	}
 }

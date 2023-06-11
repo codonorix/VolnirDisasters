@@ -76,6 +76,9 @@ public class Debug implements CommandExecutor {
 			case "undoarena":
 				undoArena(player);
 				break;
+			case "toggleinvis":
+				player.setInvisible(!player.isInvisible());
+				break;
 
 		}
 		return false;
